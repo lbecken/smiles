@@ -1,13 +1,14 @@
-import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import React from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 /**
  * Home page component.
  */
 const HomePage: React.FC = () => {
   const { isAuthenticated, isLoading, user, login, logout } = useAuth();
+  const useStyles = true;
 
-  if (isLoading) {
+  if (isLoading && !useStyles) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -18,7 +19,35 @@ const HomePage: React.FC = () => {
     );
   }
 
-  if (!isAuthenticated) {
+  if (isLoading && useStyles) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+        }}
+      >
+        <div style={{ textAlign: "center" }}>
+          <div
+            style={{
+              border: "2px solid transparent",
+              borderTopColor: "#3b82f6",
+              borderRadius: "50%",
+              width: "3rem",
+              height: "3rem",
+              animation: "spin 1s linear infinite",
+              margin: "0 auto",
+            }}
+          ></div>
+          <p style={{ marginTop: "1rem", color: "#6b7280" }}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated && !useStyles) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
@@ -34,12 +63,89 @@ const HomePage: React.FC = () => {
           <div className="space-y-4">
             <button
               onClick={login}
-              className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+              className="w-full bg-amber-400 hover:bg-amber-200 font-medium py-3 px-4 rounded-lg transition-colors"
             >
               Sign In
             </button>
 
             <div className="text-sm text-gray-500 text-center">
+              <p>Phase 0 - Development Environment</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated && useStyles) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh",
+          background: "linear-gradient(to bottom right, #eff6ff, #e0e7ff)",
+        }}
+      >
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "2rem",
+            borderRadius: "0.5rem",
+            boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+            maxWidth: "28rem",
+            width: "100%",
+          }}
+        >
+          <div style={{ textAlign: "center", marginBottom: "1.5rem" }}>
+            <h1
+              style={{
+                fontSize: "1.875rem",
+                fontWeight: "bold",
+                color: "#111827",
+                marginBottom: "0.5rem",
+              }}
+            >
+              Smiles Dental Management
+            </h1>
+            <p style={{ color: "#6b7280" }}>
+              Multi-Facility Dental Practice Management System
+            </p>
+          </div>
+
+          <div>
+            <button
+              onClick={login}
+              style={{
+                width: "100%",
+                backgroundColor: "#3b82f6",
+                color: "white",
+                fontWeight: "500",
+                padding: "0.75rem 1rem",
+                borderRadius: "0.5rem",
+                border: "none",
+                cursor: "pointer",
+                transition: "background-color 0.2s",
+              }}
+              onMouseOver={(e) =>
+                (e.currentTarget.style.backgroundColor = "#2563eb")
+              }
+              onMouseOut={(e) =>
+                (e.currentTarget.style.backgroundColor = "#3b82f6")
+              }
+            >
+              Sign In
+            </button>
+
+            <div
+              style={{
+                fontSize: "0.875rem",
+                color: "#6b7280",
+                textAlign: "center",
+                marginTop: "1rem",
+              }}
+            >
               <p>Phase 0 - Development Environment</p>
             </div>
           </div>
@@ -60,8 +166,12 @@ const HomePage: React.FC = () => {
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-700">
-                <span className="font-medium">{user?.fullName || user?.username}</span>
-                <span className="ml-2 text-gray-500">({user?.roles.join(', ')})</span>
+                <span className="font-medium">
+                  {user?.fullName || user?.username}
+                </span>
+                <span className="ml-2 text-gray-500">
+                  ({user?.roles.join(", ")})
+                </span>
               </div>
               <button
                 onClick={logout}
@@ -87,7 +197,9 @@ const HomePage: React.FC = () => {
               </h3>
               <dl className="space-y-2">
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Username</dt>
+                  <dt className="text-sm font-medium text-gray-500">
+                    Username
+                  </dt>
                   <dd className="text-sm text-gray-900">{user?.username}</dd>
                 </div>
                 <div>
@@ -96,12 +208,16 @@ const HomePage: React.FC = () => {
                 </div>
                 <div>
                   <dt className="text-sm font-medium text-gray-500">User ID</dt>
-                  <dd className="text-sm text-gray-900 font-mono">{user?.userId}</dd>
+                  <dd className="text-sm text-gray-900 font-mono">
+                    {user?.userId}
+                  </dd>
                 </div>
                 <div>
-                  <dt className="text-sm font-medium text-gray-500">Email Verified</dt>
+                  <dt className="text-sm font-medium text-gray-500">
+                    Email Verified
+                  </dt>
                   <dd className="text-sm text-gray-900">
-                    {user?.emailVerified ? '✅ Yes' : '❌ No'}
+                    {user?.emailVerified ? "✅ Yes" : "❌ No"}
                   </dd>
                 </div>
               </dl>
@@ -130,9 +246,13 @@ const HomePage: React.FC = () => {
                   <dl className="space-y-2">
                     {Object.entries(user.attributes).map(([key, value]) => (
                       <div key={key}>
-                        <dt className="text-sm font-medium text-gray-500">{key}</dt>
+                        <dt className="text-sm font-medium text-gray-500">
+                          {key}
+                        </dt>
                         <dd className="text-sm text-gray-900">
-                          {Array.isArray(value) ? value.join(', ') : String(value)}
+                          {Array.isArray(value)
+                            ? value.join(", ")
+                            : String(value)}
                         </dd>
                       </div>
                     ))}
@@ -147,9 +267,9 @@ const HomePage: React.FC = () => {
               ✅ Phase 0 Complete - Authentication Working!
             </h4>
             <p className="text-sm text-green-800">
-              Your Keycloak authentication is successfully integrated with the Spring Boot backend.
-              The JWT token is being validated and user information is being retrieved from the
-              /api/auth/me endpoint.
+              Your Keycloak authentication is successfully integrated with the
+              Spring Boot backend. The JWT token is being validated and user
+              information is being retrieved from the /api/auth/me endpoint.
             </p>
           </div>
         </div>
