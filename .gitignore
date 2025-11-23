@@ -1,0 +1,23 @@
+# Environment files
+.env
+.env.local
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Docker volumes (persistent data)
+postgres_data/
+pgadmin_data/
+keycloak_data/

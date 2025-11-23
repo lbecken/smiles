@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: smiles-postgres
+    environment:
+      POSTGRES_DB: smiles_db
+      POSTGRES_USER: smiles_user
+      POSTGRES_PASSWORD: smiles_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - smiles-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smiles_user -d smiles_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: smiles-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@smiles.local
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - smiles-network
+    depends_on:
+      - postgres
+
+  # Keycloak for authentication and authorization
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: smiles-keycloak
+    command:
+      - start-dev
+      - --import-realm
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_db
+      KC_DB_USERNAME: smiles_user
+      KC_DB_PASSWORD: smiles_password
+      KC_DB_SCHEMA: public
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin123
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HEALTH_ENABLED: true
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./docker/keycloak/realms:/opt/keycloak/data/import
+      - keycloak_data:/opt/keycloak/data
+    networks:
+      - smiles-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+volumes:
+  postgres_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  keycloak_data:
+    driver: local
+
+networks:
+  smiles-network:
+    driver: bridge
