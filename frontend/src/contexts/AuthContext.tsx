@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef, type ReactNode } from 'react';
 import keycloak from '@/config/keycloak';
 import { authService } from '@/services/auth.service';
 import type { UserInfo, AuthState } from '@/types/auth';
@@ -37,6 +37,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     token: null,
   });
 
+  // Track if Keycloak has been initialized to prevent double initialization
+  const isInitialized = useRef(false);
+
   /**
    * Fetch user information from the backend.
    */
@@ -66,6 +69,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
    * Initialize Keycloak and set up authentication.
    */
   useEffect(() => {
+    // Prevent double initialization in React StrictMode
+    if (isInitialized.current) {
+      return;
+    }
+    isInitialized.current = true;
+
     const initKeycloak = async () => {
       try {
         const authenticated = await keycloak.init({
