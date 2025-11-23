@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import keycloak from '@/config/keycloak';
 import { authService } from '@/services/auth.service';
-import { UserInfo, AuthState } from '@/types/auth';
+import type { UserInfo, AuthState } from '@/types/auth';
 
 /**
  * Authentication context type.

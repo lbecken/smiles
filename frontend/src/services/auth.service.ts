@@ -1,5 +1,5 @@
 import apiClient from './api';
-import { UserInfo } from '@/types/auth';
+import type { UserInfo } from '@/types/auth';
 
 /**
  * Auth service for authentication-related API calls.
