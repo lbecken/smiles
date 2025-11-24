@@ -10,23 +10,23 @@
   "resetPasswordAllowed": true,
   "editUsernameAllowed": false,
   "bruteForceProtected": true,
-  "accessTokenLifespan": 3600,
+  "accessTokenLifespan": 36000,
   "roles": {
     "realm": [
       {
-        "name": "ADMIN",
+        "name": "admin",
         "description": "Administrator role with full system access"
       },
       {
-        "name": "DENTIST",
+        "name": "dentist",
         "description": "Dentist role with access to patient records and appointments"
       },
       {
-        "name": "STAFF",
+        "name": "staff",
         "description": "Staff role with access to scheduling and basic patient info"
       },
       {
-        "name": "PATIENT",
+        "name": "patient",
         "description": "Patient role with access to own records and appointments"
       }
     ]
@@ -46,7 +46,7 @@
           "temporary": false
         }
       ],
-      "realmRoles": ["ADMIN"],
+      "realmRoles": ["admin"],
       "attributes": {
         "employeeId": ["EMP001"]
       }
@@ -65,7 +65,7 @@
           "temporary": false
         }
       ],
-      "realmRoles": ["DENTIST"],
+      "realmRoles": ["dentist"],
       "attributes": {
         "employeeId": ["EMP002"],
         "licenseNumber": ["DDS-12345"]
@@ -85,7 +85,7 @@
           "temporary": false
         }
       ],
-      "realmRoles": ["STAFF"],
+      "realmRoles": ["staff"],
       "attributes": {
         "employeeId": ["EMP003"]
       }
@@ -104,7 +104,7 @@
           "temporary": false
         }
       ],
-      "realmRoles": ["PATIENT"],
+      "realmRoles": ["patient"],
       "attributes": {
         "patientId": ["PAT001"],
         "dateOfBirth": ["1990-01-15"]

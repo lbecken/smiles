@@ -71,7 +71,7 @@ class StaffControllerTest {
             .facilityId(facilityId)
             .name("Dr. John Smith")
             .email("john.smith@test.com")
-            .role(StaffRole.DENTIST)
+            .role(StaffRole.dentist)
             .active(true)
             .build();
 
@@ -85,7 +85,7 @@ class StaffControllerTest {
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.name").value("Dr. John Smith"))
             .andExpect(jsonPath("$.email").value("john.smith@test.com"))
-            .andExpect(jsonPath("$.role").value("DENTIST"));
+            .andExpect(jsonPath("$.role").value("dentist"));
     }
 
     @Test
@@ -95,7 +95,7 @@ class StaffControllerTest {
             .facilityId(facilityId)
             .name("Jane Doe")
             .email("jane.doe@test.com")
-            .role(StaffRole.ASSISTANT)
+            .role(StaffRole.assistant)
             .build();
 
         mockMvc
@@ -116,7 +116,7 @@ class StaffControllerTest {
             .facilityId(facilityId)
             .name("Dr. Sarah Johnson")
             .email("sarah.johnson@test.com")
-            .role(StaffRole.DENTIST)
+            .role(StaffRole.dentist)
             .build();
 
         mockMvc
@@ -138,14 +138,14 @@ class StaffControllerTest {
             .facilityId(facilityId)
             .name("Dr. Alice Brown")
             .email("alice.brown@test.com")
-            .role(StaffRole.DENTIST)
+            .role(StaffRole.dentist)
             .build();
 
         CreateStaffRequest staff2 = CreateStaffRequest.builder()
             .facilityId(facilityId)
             .name("Bob Wilson")
             .email("bob.wilson@test.com")
-            .role(StaffRole.RECEPTIONIST)
+            .role(StaffRole.receptionist)
             .build();
 
         mockMvc.perform(

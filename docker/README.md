@@ -51,10 +51,10 @@ Once Keycloak is running, the following test users are available:
 
 | Username      | Password    | Role     | Description |
 |---------------|-------------|----------|-------------|
-| admin         | admin123    | ADMIN    | System administrator |
-| dr.smith      | dentist123  | DENTIST  | Dentist user |
-| jane.doe      | staff123    | STAFF    | Staff user |
-| patient.test  | patient123  | PATIENT  | Patient user |
+| admin         | admin123    | admin    | System administrator |
+| dr.smith      | dentist123  | dentist  | Dentist user |
+| jane.doe      | staff123    | staff    | Staff user |
+| patient.test  | patient123  | patient  | Patient user |
 
 ## Keycloak Realm Configuration
 
@@ -65,10 +65,10 @@ The realm is automatically imported from `./keycloak/realms/smiles-realm.json` o
 - `smiles-backend`: Bearer-only client for Spring Boot API
 
 **Roles**:
-- ADMIN: Full system access
-- DENTIST: Access to patient records and appointments
-- STAFF: Access to scheduling and basic patient info
-- PATIENT: Access to own records and appointments
+- admin: Full system access
+- dentist: Access to patient records and appointments
+- staff: Access to scheduling and basic patient info
+- patient: Access to own records and appointments
 
 ## Health Checks
 

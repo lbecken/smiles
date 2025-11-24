@@ -100,10 +100,10 @@ Phase 0 is complete! Test the authentication system:
 
 | Username      | Password    | Role     |
 |---------------|-------------|----------|
-| admin         | admin123    | ADMIN    |
-| dr.smith      | dentist123  | DENTIST  |
-| jane.doe      | staff123    | STAFF    |
-| patient.test  | patient123  | PATIENT  |
+| admin         | admin123    | admin    |
+| dr.smith      | dentist123  | dentist  |
+| jane.doe      | staff123    | staff    |
+| patient.test  | patient123  | patient  |
 
 4. After login, you should see:
    - User information from JWT token

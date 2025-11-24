@@ -28,7 +28,7 @@ export interface AuthState {
 /**
  * Role types in the Smiles system.
  */
-export type UserRole = 'ADMIN' | 'DENTIST' | 'STAFF' | 'PATIENT';
+export type UserRole = 'admin' | 'dentist' | 'staff' | 'patient';
 
 /**
  * Check if user has a specific role.

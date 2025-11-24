@@ -125,7 +125,7 @@ module/
 ## Security
 
 - All endpoints require JWT authentication (except health checks)
-- Roles: ADMIN, DENTIST, STAFF, PATIENT
+- Roles: admin, dentist, staff, patient
 - CORS enabled for frontend origins
 - Stateless session management
 

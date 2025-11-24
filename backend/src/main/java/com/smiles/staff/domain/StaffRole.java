@@ -7,22 +7,22 @@ public enum StaffRole {
     /**
      * Dentist - can perform dental procedures.
      */
-    DENTIST("dentist"),
+    dentist("dentist"),
 
     /**
      * Dental assistant - assists dentists.
      */
-    ASSISTANT("assistant"),
+    assistant("assistant"),
 
     /**
      * Receptionist - handles front desk operations.
      */
-    RECEPTIONIST("receptionist"),
+    receptionist("receptionist"),
 
     /**
      * Admin - administrative staff with elevated permissions.
      */
-    ADMIN("admin");
+    admin("admin");
 
     private final String value;
 

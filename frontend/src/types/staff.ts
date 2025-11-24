@@ -2,10 +2,10 @@
  * Staff roles.
  */
 export enum StaffRole {
-  DENTIST = 'DENTIST',
-  ASSISTANT = 'ASSISTANT',
-  RECEPTIONIST = 'RECEPTIONIST',
-  ADMIN = 'ADMIN'
+  dentist = 'dentist',
+  assistant = 'assistant',
+  receptionist = 'receptionist',
+  admin = 'admin'
 }
 
 /**
