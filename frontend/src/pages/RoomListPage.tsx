@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { roomService } from '@/services/room.service';
 import { facilityService } from '@/services/facility.service';
-import { Door, Plus } from 'lucide-react';
+import { Home, Plus } from 'lucide-react';
 import { useState } from 'react';
 
 /**
@@ -29,7 +29,7 @@ export default function RoomListPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold flex items-center gap-2">
-          <Door className="w-8 h-8" />
+          <Home className="w-8 h-8" />
           Rooms
         </h1>
         <button

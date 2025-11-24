@@ -1,12 +1,14 @@
 /**
  * Staff roles.
  */
-export enum StaffRole {
-  DENTIST = 'DENTIST',
-  ASSISTANT = 'ASSISTANT',
-  RECEPTIONIST = 'RECEPTIONIST',
-  ADMIN = 'ADMIN'
-}
+export const StaffRole = {
+  DENTIST: 'DENTIST',
+  ASSISTANT: 'ASSISTANT',
+  RECEPTIONIST: 'RECEPTIONIST',
+  ADMIN: 'ADMIN'
+} as const;
+
+export type StaffRole = typeof StaffRole[keyof typeof StaffRole];
 
 /**
  * Staff entity representing a staff member.

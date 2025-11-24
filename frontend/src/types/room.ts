@@ -1,10 +1,12 @@
 /**
  * Room types.
  */
-export enum RoomType {
-  CHAIR = 'CHAIR',
-  SURGERY_ROOM = 'SURGERY_ROOM'
-}
+export const RoomType = {
+  CHAIR: 'CHAIR',
+  SURGERY_ROOM: 'SURGERY_ROOM'
+} as const;
+
+export type RoomType = typeof RoomType[keyof typeof RoomType];
 
 /**
  * Room entity representing a treatment room or operatory.

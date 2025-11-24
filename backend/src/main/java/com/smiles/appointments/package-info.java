@@ -1,15 +1,11 @@
 /**
- * Appointments and Scheduling module.
+ * Appointments module - handles appointment scheduling and management.
  *
- * Handles:
- * - Appointment booking and management
- * - Calendar and schedule views
- * - Appointment types and durations
- * - Patient check-in/check-out
- * - Waitlist management
- * - Real-time calendar synchronization
- *
- * Depends on: facilities, staff, patients, rooms
- * Publishes events to: realtime
+ * <p>This module is responsible for:
+ * <ul>
+ *   <li>Managing appointment creation and lifecycle</li>
+ *   <li>Detecting and preventing scheduling conflicts</li>
+ *   <li>Coordinating dentist and room availability</li>
+ * </ul>
  */
 package com.smiles.appointments;

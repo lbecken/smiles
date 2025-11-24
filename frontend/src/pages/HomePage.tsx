@@ -1,11 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import AppointmentsPage from "./AppointmentsPage";
+import FacilityListPage from "./FacilityListPage";
+import StaffListPage from "./StaffListPage";
+import RoomListPage from "./RoomListPage";
+import PatientListPage from "./PatientListPage";
+
+type Page = "home" | "appointments" | "facilities" | "staff" | "rooms" | "patients";
 
 /**
  * Home page component.
  */
 const HomePage: React.FC = () => {
   const { isAuthenticated, isLoading, user, login, logout } = useAuth();
+  const [currentPage, setCurrentPage] = useState<Page>("home");
   const useStyles = true;
 
   if (isLoading && !useStyles) {
@@ -154,15 +162,177 @@ const HomePage: React.FC = () => {
     );
   }
 
+  // Render current page content
+  const renderPage = () => {
+    switch (currentPage) {
+      case "appointments":
+        return <AppointmentsPage />;
+      case "facilities":
+        return <FacilityListPage />;
+      case "staff":
+        return <StaffListPage />;
+      case "rooms":
+        return <RoomListPage />;
+      case "patients":
+        return <PatientListPage />;
+      default:
+        return (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Welcome, {user?.firstName || user?.username}!
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  User Information
+                </h3>
+                <dl className="space-y-2">
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">
+                      Username
+                    </dt>
+                    <dd className="text-sm text-gray-900">{user?.username}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">Email</dt>
+                    <dd className="text-sm text-gray-900">{user?.email}</dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">User ID</dt>
+                    <dd className="text-sm text-gray-900 font-mono">
+                      {user?.userId}
+                    </dd>
+                  </div>
+                  <div>
+                    <dt className="text-sm font-medium text-gray-500">
+                      Email Verified
+                    </dt>
+                    <dd className="text-sm text-gray-900">
+                      {user?.emailVerified ? "✅ Yes" : "❌ No"}
+                    </dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                  Roles & Permissions
+                </h3>
+                <div className="space-y-2">
+                  {user?.roles.map((role) => (
+                    <div
+                      key={role}
+                      className="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full mr-2"
+                    >
+                      {role}
+                    </div>
+                  ))}
+                </div>
+
+                {user?.attributes && Object.keys(user.attributes).length > 0 && (
+                  <div className="mt-4">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-3">
+                      Additional Attributes
+                    </h3>
+                    <dl className="space-y-2">
+                      {Object.entries(user.attributes).map(([key, value]) => (
+                        <div key={key}>
+                          <dt className="text-sm font-medium text-gray-500">
+                            {key}
+                          </dt>
+                          <dd className="text-sm text-gray-900">
+                            {Array.isArray(value)
+                              ? value.join(", ")
+                              : String(value)}
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <h4 className="text-sm font-semibold text-green-900 mb-2">
+                ✅ Phase 1 & 2 Complete!
+              </h4>
+              <p className="text-sm text-green-800">
+                Phase 1: Core entities (Facility, Room, Staff, Patient) are implemented.
+                <br />
+                Phase 2: Basic appointment scheduling with conflict detection is ready!
+              </p>
+            </div>
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">
+            <div className="flex items-center space-x-8">
+              <h1
+                className="text-xl font-bold text-gray-900 cursor-pointer hover:text-blue-600"
+                onClick={() => setCurrentPage("home")}
+              >
                 Smiles Dental Management
               </h1>
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => setCurrentPage("appointments")}
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    currentPage === "appointments"
+                      ? "bg-blue-100 text-blue-900"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Appointments
+                </button>
+                <button
+                  onClick={() => setCurrentPage("facilities")}
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    currentPage === "facilities"
+                      ? "bg-blue-100 text-blue-900"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Facilities
+                </button>
+                <button
+                  onClick={() => setCurrentPage("staff")}
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    currentPage === "staff"
+                      ? "bg-blue-100 text-blue-900"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Staff
+                </button>
+                <button
+                  onClick={() => setCurrentPage("rooms")}
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    currentPage === "rooms"
+                      ? "bg-blue-100 text-blue-900"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Rooms
+                </button>
+                <button
+                  onClick={() => setCurrentPage("patients")}
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    currentPage === "patients"
+                      ? "bg-blue-100 text-blue-900"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
+                >
+                  Patients
+                </button>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="text-sm text-gray-700">
@@ -184,96 +354,7 @@ const HomePage: React.FC = () => {
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
-            Welcome, {user?.firstName || user?.username}!
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                User Information
-              </h3>
-              <dl className="space-y-2">
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">
-                    Username
-                  </dt>
-                  <dd className="text-sm text-gray-900">{user?.username}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">Email</dt>
-                  <dd className="text-sm text-gray-900">{user?.email}</dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">User ID</dt>
-                  <dd className="text-sm text-gray-900 font-mono">
-                    {user?.userId}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-sm font-medium text-gray-500">
-                    Email Verified
-                  </dt>
-                  <dd className="text-sm text-gray-900">
-                    {user?.emailVerified ? "✅ Yes" : "❌ No"}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Roles & Permissions
-              </h3>
-              <div className="space-y-2">
-                {user?.roles.map((role) => (
-                  <div
-                    key={role}
-                    className="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-3 py-1 rounded-full mr-2"
-                  >
-                    {role}
-                  </div>
-                ))}
-              </div>
-
-              {user?.attributes && Object.keys(user.attributes).length > 0 && (
-                <div className="mt-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                    Additional Attributes
-                  </h3>
-                  <dl className="space-y-2">
-                    {Object.entries(user.attributes).map(([key, value]) => (
-                      <div key={key}>
-                        <dt className="text-sm font-medium text-gray-500">
-                          {key}
-                        </dt>
-                        <dd className="text-sm text-gray-900">
-                          {Array.isArray(value)
-                            ? value.join(", ")
-                            : String(value)}
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <h4 className="text-sm font-semibold text-green-900 mb-2">
-              ✅ Phase 0 Complete - Authentication Working!
-            </h4>
-            <p className="text-sm text-green-800">
-              Your Keycloak authentication is successfully integrated with the
-              Spring Boot backend. The JWT token is being validated and user
-              information is being retrieved from the /api/auth/me endpoint.
-            </p>
-          </div>
-        </div>
-      </main>
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{renderPage()}</main>
     </div>
   );
 };
