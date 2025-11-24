@@ -1,28 +1,32 @@
 package com.smiles.common.security;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
- * Utility class for security-related operations.
+ * Utility component for security-related operations.
  */
+@Component
+@RequiredArgsConstructor
 public class SecurityUtils {
 
-    private SecurityUtils() {
-        // Utility class
-    }
+    private final FacilityAccessChecker facilityAccessChecker;
 
     /**
      * Get the current authenticated user's JWT token.
      *
      * @return the JWT token or null if not authenticated
      */
-    public static Jwt getCurrentUserJwt() {
+    public Jwt getCurrentUserJwt() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.getPrincipal() instanceof Jwt jwt) {
@@ -37,7 +41,7 @@ public class SecurityUtils {
      *
      * @return the username or null if not authenticated
      */
-    public static String getCurrentUsername() {
+    public String getCurrentUsername() {
         Jwt jwt = getCurrentUserJwt();
         return jwt != null ? jwt.getClaimAsString("preferred_username") : null;
     }
@@ -47,7 +51,7 @@ public class SecurityUtils {
      *
      * @return the email or null if not authenticated
      */
-    public static String getCurrentUserEmail() {
+    public String getCurrentUserEmail() {
         Jwt jwt = getCurrentUserJwt();
         return jwt != null ? jwt.getClaimAsString("email") : null;
     }
@@ -57,7 +61,7 @@ public class SecurityUtils {
      *
      * @return list of roles
      */
-    public static List<String> getCurrentUserRoles() {
+    public List<String> getCurrentUserRoles() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null) {
@@ -76,7 +80,7 @@ public class SecurityUtils {
      * @param role the role to check
      * @return true if the user has the role, false otherwise
      */
-    public static boolean hasRole(String role) {
+    public boolean hasRole(String role) {
         return getCurrentUserRoles().contains(role);
     }
 
@@ -85,8 +89,33 @@ public class SecurityUtils {
      *
      * @return the subject or null if not authenticated
      */
-    public static String getCurrentUserSubject() {
+    public String getCurrentUserSubject() {
         Jwt jwt = getCurrentUserJwt();
         return jwt != null ? jwt.getSubject() : null;
+    }
+
+    /**
+     * Check if the current user has access to a specific facility.
+     * Admins have access to all facilities.
+     * Other users only have access to their assigned facility.
+     *
+     * @param facilityId the facility ID to check access for
+     * @throws AccessDeniedException if the user doesn't have access
+     */
+    public void checkFacilityAccess(UUID facilityId) {
+        String keycloakUserId = getCurrentUserSubject();
+        if (keycloakUserId == null) {
+            throw new AccessDeniedException("User not authenticated");
+        }
+
+        // Admins have access to all facilities
+        if (hasRole("admin")) {
+            return;
+        }
+
+        // Check if user has access to the specified facility
+        if (!facilityAccessChecker.hasAccessToFacility(keycloakUserId, facilityId)) {
+            throw new AccessDeniedException("User does not have access to facility: " + facilityId);
+        }
     }
 }

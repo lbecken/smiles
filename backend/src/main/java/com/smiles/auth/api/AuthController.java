@@ -24,6 +24,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthController {
 
+    private final SecurityUtils securityUtils;
+
     /**
      * Get current authenticated user information.
      *
@@ -34,7 +36,7 @@ public class AuthController {
     public ResponseEntity<UserInfoDto> getCurrentUser(Authentication authentication) {
         log.debug("Getting current user info for: {}", authentication.getName());
 
-        Jwt jwt = SecurityUtils.getCurrentUserJwt();
+        Jwt jwt = securityUtils.getCurrentUserJwt();
 
         if (jwt == null) {
             return ResponseEntity.status(401).build();
@@ -48,7 +50,7 @@ public class AuthController {
                 .firstName(jwt.getClaimAsString("given_name"))
                 .lastName(jwt.getClaimAsString("family_name"))
                 .fullName(jwt.getClaimAsString("name"))
-                .roles(SecurityUtils.getCurrentUserRoles())
+                .roles(securityUtils.getCurrentUserRoles())
                 .emailVerified(jwt.getClaimAsBoolean("email_verified"))
                 .issuedAt(jwt.getIssuedAt() != null ? jwt.getIssuedAt().getEpochSecond() : null)
                 .expiresAt(jwt.getExpiresAt() != null ? jwt.getExpiresAt().getEpochSecond() : null)
@@ -69,8 +71,8 @@ public class AuthController {
     public ResponseEntity<Map<String, Object>> authHealth(Authentication authentication) {
         Map<String, Object> response = new HashMap<>();
         response.put("authenticated", authentication != null && authentication.isAuthenticated());
-        response.put("username", SecurityUtils.getCurrentUsername());
-        response.put("roles", SecurityUtils.getCurrentUserRoles());
+        response.put("username", securityUtils.getCurrentUsername());
+        response.put("roles", securityUtils.getCurrentUserRoles());
         response.put("timestamp", Instant.now().toString());
 
         return ResponseEntity.ok(response);
