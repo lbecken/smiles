@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # PostgreSQL Database
@@ -12,7 +12,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres_data:/var/lib/postgresql/data
       - ./docker/init-scripts:/docker-entrypoint-initdb.d
     networks:
       - smiles-network
@@ -29,11 +29,11 @@ services:
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@smiles.local
       PGADMIN_DEFAULT_PASSWORD: admin123
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: "False"
     ports:
       - "5050:80"
     volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      - ./pgadmin_data:/var/lib/pgadmin
     networks:
       - smiles-network
     depends_on:
@@ -62,26 +62,30 @@ services:
       - "8080:8080"
     volumes:
       - ./docker/keycloak/realms:/opt/keycloak/data/import
-      - keycloak_data:/opt/keycloak/data
+      - ./keycloak_data:/opt/keycloak/data
     networks:
       - smiles-network
     depends_on:
       postgres:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'"]
+      test:
+        [
+          "CMD-SHELL",
+          "exec 3<>/dev/tcp/localhost/8080 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'",
+        ]
       interval: 30s
       timeout: 10s
       retries: 5
       start_period: 60s
 
-volumes:
-  postgres_data:
-    driver: local
-  pgadmin_data:
-    driver: local
-  keycloak_data:
-    driver: local
+#volumes:
+#  postgres_data:
+#    driver: local
+#  pgadmin_data:
+#    driver: local
+#  keycloak_data:
+#    driver: local
 
 networks:
   smiles-network:
